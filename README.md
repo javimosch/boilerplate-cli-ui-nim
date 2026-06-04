@@ -4,7 +4,7 @@ Nim CLI with embedded web UI. Single binary, no runtime dependencies.
 
 Part of [SuperCLI](https://github.com/javimosch/supercli) - build CLI/UI plugins fast for 2026.
 
-**Other versions**: [Go+Vue](https://github.com/javimosch/boilerplate-cli-ui-go-v2-vue) | [Rust+Vue](https://github.com/javimosch/boilerplate-cli-ui-rust) | [C++](https://github.com/javimosch/boilerplate-cli-ui-cpp) | [.NET](https://github.com/javimosch/boilerplate-cli-ui-dotnet) | [Node](https://github.com/javimosch/boilerplate-cli-ui-node) | [Python](https://github.com/javimosch/boilerplate-cli-ui-python)
+**Other versions**: [Go+Vue](https://github.com/javimosch/boilerplate-cli-ui-go-v2-vue) | [Rust+Vue](https://github.com/javimosch/boilerplate-cli-ui-rust) | [C++](https://github.com/javimosch/boilerplate-cli-ui-cpp) | [.NET](https://github.com/javimosch/boilerplate-cli-ui-dotnet) | [Node](https://github.com/javimosch/boilerplate-cli-ui-node) | [Python](https://github.com/javimosch/boilerplate-cli-ui-python) | [Nim](https://github.com/javimosch/boilerplate-cli-ui-nim) | [Zig](https://github.com/javimosch/boilerplate-cli-ui-zig)
 
 ## Architecture
 
@@ -102,9 +102,9 @@ Routes use hashbang URLs:
 
 ## Comparison
 
-| Aspect | Go | Rust | C++ | Nim |
-|--------|-----|------|-----|-----|
-| Binary size | ~5MB | ~1.1MB | ~493KB | ~364KB |
-| Dev speed | ⭐⭐⭐ | ⭐⭐ | ⭐ | ⭐⭐⭐ |
-| Syntax | Go | Rust | C++ | Python-like |
-| Ecosystem | Large | Medium | Large | Medium |
+| Aspect | Go | Rust | C++ | Nim | Zig |
+|--------|-----|------|-----|-----|-----|
+| Binary size | ~5MB | ~1.1MB | ~493KB | ~364KB | ~190KB |
+| Dev speed | ⭐⭐⭐ | ⭐⭐ | ⭐ | ⭐⭐⭐ | ⭐⭐ |
+| Syntax | Go | Rust | C++ | Python-like | C-like |
+| Ecosystem | Large | Medium | Large | Medium | Small |

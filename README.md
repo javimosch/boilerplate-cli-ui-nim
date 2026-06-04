@@ -11,15 +11,15 @@ Part of [SuperCLI](https://github.com/javimosch/supercli) - build CLI/UI plugins
 ```
 boilerplate-cli-ui-nim/
 ├── src/
-│   └── server.nim        # CLI + HTTP server
-├── ui/                   # Frontend (embedded at compile time)
-│   ├── index.html
-│   ├── js/
-│   │   ├── app.js
-│   │   ├── components/
-│   │   └── views/
-│   └── css/
-│       └── styles.css
+│   ├── server.nim        # CLI + HTTP server
+│   └── ui/               # Frontend (embedded at compile time via staticRead)
+│       ├── index.html
+│       ├── js/
+│       │   ├── app.js
+│       │   ├── components/
+│       │   └── views/
+│       └── css/
+│           └── styles.css
 ├── boilerplate-cli-ui-nim.nimble
 ├── build.sh
 └── README.md
@@ -30,9 +30,12 @@ boilerplate-cli-ui-nim/
 Frontend files are **embedded into the binary** at compile time:
 
 ```nim
-const INDEX_HTML = staticRead("../ui/index.html")
-const APP_JS = staticRead("../ui/js/app.js")
+const INDEX_HTML = staticRead("ui/index.html")
+const APP_JS = staticRead("ui/js/app.js")
 ```
+
+`staticRead` resolves paths relative to the `.nim` source file's directory.
+Since `server.nim` is in `src/`, `staticRead("ui/index.html")` reads `src/ui/index.html`.
 
 **Benefits:**
 - Single binary output (no runtime file dependencies)

@@ -1,4 +1,4 @@
-import std/[asynchttpserver, asyncdispatch, json, os, strutils, times]
+import std/[asynchttpserver, asyncdispatch, json, strutils, times]
 import std/parseopt
 
 const VERSION = "1.0.0"
@@ -19,16 +19,6 @@ const SETTINGS_JS = staticRead("ui/js/views/Settings.js")
 
 # Start time for uptime calculation
 var startTime = now()
-
-proc getContentType(path: string): string =
-  if path.endsWith(".html"): return "text/html"
-  if path.endsWith(".js"): return "application/javascript"
-  if path.endsWith(".css"): return "text/css"
-  if path.endsWith(".json"): return "application/json"
-  if path.endsWith(".png"): return "image/png"
-  if path.endsWith(".jpg") or path.endsWith(".jpeg"): return "image/jpeg"
-  if path.endsWith(".svg"): return "image/svg+xml"
-  return "application/octet-stream"
 
 proc formatUptime(): string =
   let elapsed = now() - startTime

@@ -26,7 +26,7 @@ const Sidebar = {
                         <i data-lucide="terminal" class="w-5 h-5 text-indigo-600"></i>
                         CLI UI
                     </h1>
-                    <p class="text-xs text-gray-500 mt-1">Rust + Vue 3</p>
+                    <p class="text-xs text-gray-500 mt-1">Nim + Vue 3</p>
                 </div>
                 
                 <!-- Navigation -->

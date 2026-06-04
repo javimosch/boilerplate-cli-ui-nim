@@ -3,20 +3,20 @@ const SettingsView = {
     template: `
         <div>
             <div class="mb-6">
-                <h2 class="text-2xl font-bold text-gray-900">Settings</h2>
-                <p class="text-gray-500 mt-1">Configure your CLI UI</p>
+                <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Settings</h2>
+                <p class="text-gray-500 dark:text-gray-400 mt-1">Configure your CLI UI</p>
             </div>
             
             <div class="space-y-6">
                 <!-- Appearance -->
-                <div class="bg-white rounded-xl border border-gray-200 p-6">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Appearance</h3>
+                <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Appearance</h3>
                     <div class="space-y-4">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Theme</label>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Theme</label>
                             <select 
                                 v-model="settings.theme"
-                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                             >
                                 <option value="light">Light</option>
                                 <option value="dark">Dark</option>
@@ -24,7 +24,7 @@ const SettingsView = {
                             </select>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Accent Color</label>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Accent Color</label>
                             <div class="flex gap-2">
                                 <button 
                                     v-for="color in accentColors" 
@@ -42,29 +42,29 @@ const SettingsView = {
                 </div>
                 
                 <!-- API Configuration -->
-                <div class="bg-white rounded-xl border border-gray-200 p-6">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-4">API Configuration</h3>
+                <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">API Configuration</h3>
                     <div class="space-y-4">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Refresh Interval (seconds)</label>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Refresh Interval (seconds)</label>
                             <input 
                                 v-model.number="settings.refreshInterval"
                                 type="number" 
                                 min="1" 
                                 max="60"
-                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                             >
                         </div>
                         <div class="flex items-center justify-between">
                             <div>
-                                <label class="block text-sm font-medium text-gray-700">Auto-refresh</label>
-                                <p class="text-xs text-gray-500">Automatically refresh status</p>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Auto-refresh</label>
+                                <p class="text-xs text-gray-500 dark:text-gray-400">Automatically refresh status</p>
                             </div>
                             <button 
                                 @click="settings.autoRefresh = !settings.autoRefresh"
                                 :class="[
                                     'relative inline-flex h-6 w-11 items-center rounded-full transition-colors',
-                                    settings.autoRefresh ? 'bg-indigo-600' : 'bg-gray-200'
+                                    settings.autoRefresh ? 'bg-indigo-600' : 'bg-gray-200 dark:bg-gray-600'
                                 ]"
                             >
                                 <span 
@@ -80,10 +80,10 @@ const SettingsView = {
                 
                 <!-- Save Button -->
                 <div class="flex justify-end items-center gap-4">
-                    <span v-if="saveMessage" class="text-sm text-green-600">{{ saveMessage }}</span>
+                    <span v-if="saveMessage" class="text-sm text-green-600 dark:text-green-400">{{ saveMessage }}</span>
                     <button 
                         @click="saveSettings"
-                        class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-medium"
+                        class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 dark:hover:bg-indigo-500 transition-colors font-medium"
                     >
                         Save Settings
                     </button>
@@ -92,8 +92,11 @@ const SettingsView = {
         </div>
     `,
     setup() {
+        const theme = Vue.inject('theme');
+        const setTheme = Vue.inject('setTheme');
+        
         const settings = Vue.reactive({
-            theme: 'light',
+            theme: theme.value,
             accentColor: '#6366f1',
             refreshInterval: 10,
             autoRefresh: true,
@@ -112,15 +115,25 @@ const SettingsView = {
         
         const saveSettings = () => {
             localStorage.setItem('cli-ui-settings', JSON.stringify(settings));
+            // Apply theme immediately on save
+            setTheme(settings.theme);
             saveMessage.value = 'Settings saved!';
             setTimeout(() => { saveMessage.value = ''; }, 2000);
         };
         
-        // Load saved settings
+        // Apply theme whenever it changes in the dropdown
+        Vue.watch(() => settings.theme, (newTheme) => {
+            setTheme(newTheme);
+        });
+        
+        // Load saved settings on mount
         Vue.onMounted(() => {
             const saved = localStorage.getItem('cli-ui-settings');
             if (saved) {
-                Object.assign(settings, JSON.parse(saved));
+                const parsed = JSON.parse(saved);
+                Object.assign(settings, parsed);
+                // Ensure theme from settings is applied
+                setTheme(parsed.theme || theme.value);
             }
         });
         

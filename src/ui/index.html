@@ -11,6 +11,23 @@
     <!-- Tailwind CSS from CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     
+    <!-- Tailwind CSS Config (must be after CDN script) -->
+    <script>
+        (function() {
+            var setConfig = function() {
+                if (typeof tailwind !== 'undefined') {
+                    tailwind.config = { darkMode: 'class' };
+                }
+            };
+            // Try immediately (CDN script is synchronous, should be ready)
+            setConfig();
+            // Fallback: retry on DOM ready in case CDN was deferred
+            if (typeof tailwind === 'undefined') {
+                document.addEventListener('DOMContentLoaded', setConfig);
+            }
+        })();
+    </script>
+    
     <!-- Lucide Icons from CDN -->
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
     

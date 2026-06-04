@@ -3,8 +3,8 @@ const DashboardView = {
     template: `
         <div>
             <div class="mb-6">
-                <h2 class="text-2xl font-bold text-gray-900">Dashboard</h2>
-                <p class="text-gray-500 mt-1">Server status and overview</p>
+                <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Dashboard</h2>
+                <p class="text-gray-500 dark:text-gray-400 mt-1">Server status and overview</p>
             </div>
             
             <!-- Status Cards -->
@@ -36,10 +36,10 @@ const DashboardView = {
             </div>
             
             <!-- API Endpoints -->
-            <div class="bg-white rounded-xl border border-gray-200 p-6">
+            <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
                 <div class="flex items-center justify-between mb-4">
-                    <h3 class="text-lg font-semibold text-gray-900">API Endpoints</h3>
-                    <button @click="fetchStatus()" class="text-sm text-indigo-600 hover:text-indigo-700 flex items-center gap-1">
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">API Endpoints</h3>
+                    <button @click="fetchStatus()" class="text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 flex items-center gap-1">
                         <i data-lucide="refresh-cw" class="w-4 h-4"></i> Refresh
                     </button>
                 </div>
@@ -48,7 +48,7 @@ const DashboardView = {
                         v-for="endpoint in endpoints" 
                         :key="endpoint.path"
                         @click="testEndpoint(endpoint.path)"
-                        class="flex items-center justify-between p-3 rounded-lg bg-gray-50 api-endpoint transition-all cursor-pointer"
+                        class="flex items-center justify-between p-3 rounded-lg bg-gray-50 dark:bg-gray-700/50 api-endpoint transition-all cursor-pointer"
                     >
                         <div class="flex items-center gap-3">
                             <span :class="[
@@ -57,9 +57,9 @@ const DashboardView = {
                             ]">
                                 {{ endpoint.method }}
                             </span>
-                            <span class="font-mono text-sm text-gray-700">{{ endpoint.path }}</span>
+                            <span class="font-mono text-sm text-gray-700 dark:text-gray-300">{{ endpoint.path }}</span>
                         </div>
-                        <span class="text-sm text-gray-500">{{ endpoint.description }}</span>
+                        <span class="text-sm text-gray-500 dark:text-gray-400">{{ endpoint.description }}</span>
                     </div>
                 </div>
                 
@@ -88,10 +88,10 @@ const DashboardView = {
         
         const methodColor = (method) => {
             const colors = {
-                'GET': 'bg-green-100 text-green-700',
-                'POST': 'bg-blue-100 text-blue-700',
+                'GET': 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300',
+                'POST': 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300',
             };
-            return colors[method] || 'bg-gray-100 text-gray-700';
+            return colors[method] || 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300';
         };
         
         const testEndpoint = async (path) => {

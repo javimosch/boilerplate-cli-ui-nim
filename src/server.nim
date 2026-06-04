@@ -53,29 +53,35 @@ proc printHelp() =
   echo "  GET /api/status  Server status (JSON)"
   echo "  GET /api/health  Health check (JSON)"
 
+proc headers(contentType: string): HttpHeaders =
+  newHttpHeaders([
+    ("Content-Type", contentType),
+    ("Cache-Control", "no-cache, no-store, must-revalidate")
+  ])
+
 proc handler(req: Request) {.async.} =
   let path = req.url.path
   
   # Static UI files
   case path
   of "/":
-    await req.respond(Http200, INDEX_HTML, newHttpHeaders([("Content-Type", "text/html")]))
+    await req.respond(Http200, INDEX_HTML, headers("text/html"))
   of "/js/app.js":
-    await req.respond(Http200, APP_JS, newHttpHeaders([("Content-Type", "application/javascript")]))
+    await req.respond(Http200, APP_JS, headers("application/javascript"))
   of "/css/styles.css":
-    await req.respond(Http200, STYLES_CSS, newHttpHeaders([("Content-Type", "text/css")]))
+    await req.respond(Http200, STYLES_CSS, headers("text/css"))
   # Components
   of "/js/components/AppLayout.js":
-    await req.respond(Http200, APPLAYOUT_JS, newHttpHeaders([("Content-Type", "application/javascript")]))
+    await req.respond(Http200, APPLAYOUT_JS, headers("application/javascript"))
   of "/js/components/Sidebar.js":
-    await req.respond(Http200, SIDEBAR_JS, newHttpHeaders([("Content-Type", "application/javascript")]))
+    await req.respond(Http200, SIDEBAR_JS, headers("application/javascript"))
   of "/js/components/StatusCard.js":
-    await req.respond(Http200, STATUSCARD_JS, newHttpHeaders([("Content-Type", "application/javascript")]))
+    await req.respond(Http200, STATUSCARD_JS, headers("application/javascript"))
   # Views
   of "/js/views/Dashboard.js":
-    await req.respond(Http200, DASHBOARD_JS, newHttpHeaders([("Content-Type", "application/javascript")]))
+    await req.respond(Http200, DASHBOARD_JS, headers("application/javascript"))
   of "/js/views/Settings.js":
-    await req.respond(Http200, SETTINGS_JS, newHttpHeaders([("Content-Type", "application/javascript")]))
+    await req.respond(Http200, SETTINGS_JS, headers("application/javascript"))
   # API endpoints
   of "/api/status":
     let uptime = formatUptime()
@@ -87,13 +93,13 @@ proc handler(req: Request) {.async.} =
       "version": VERSION,
       "start_time": $startTime
     })
-    await req.respond(Http200, response, newHttpHeaders([("Content-Type", "application/json")]))
+    await req.respond(Http200, response, headers("application/json"))
   of "/api/health":
     let response = $(%*{
       "status": "healthy",
       "version": VERSION
     })
-    await req.respond(Http200, response, newHttpHeaders([("Content-Type", "application/json")]))
+    await req.respond(Http200, response, headers("application/json"))
   else:
     await req.respond(Http404, "Not found")
 

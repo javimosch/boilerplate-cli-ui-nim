@@ -69,7 +69,7 @@ const SettingsView = {
                             >
                                 <span 
                                     :class="[
-                                        'inline-block h-4 w-4 transform rounded-full bg-white transition-transform',
+                                        'inline-block h-4 w-4 transform rounded-full bg-white dark:bg-gray-300 transition-transform',
                                         settings.autoRefresh ? 'translate-x-6' : 'translate-x-1'
                                     ]"
                                 ></span>

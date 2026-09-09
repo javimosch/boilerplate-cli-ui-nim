@@ -39,7 +39,7 @@ const
   DefaultPort = 8080
   DefaultHost = "127.0.0.1"
 
-var startTime = now()
+var startTime = epochTime()
 
 ## What the server actually bound. /_shutdown is token-gated whenever the host
 ## is not loopback (cli-daemon-spec §3).
@@ -72,8 +72,7 @@ proc die(code: int, etype, message, suggestion: string) {.noreturn.} =
   quit(code)
 
 proc formatUptime(): string =
-  let elapsed = now() - startTime
-  let seconds = elapsed.inSeconds
+  let seconds = int(epochTime() - startTime)
   let hours = seconds div 3600
   let minutes = (seconds mod 3600) div 60
   let secs = seconds mod 60
@@ -252,7 +251,7 @@ proc handler(req: Request) {.async.} =
 proc runServer(host: string, port: int) =
   boundLoopback = isLoopback(host)
   boundPort = port
-  startTime = now()
+  startTime = epochTime()
 
   let server = newAsyncHttpServer()
 

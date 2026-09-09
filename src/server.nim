@@ -165,6 +165,14 @@ proc shutdownAuthorized(req: Request): bool =
   if token.len == 0: return false
   $req.headers.getOrDefault("X-Shutdown-Token") == token
 
+## Exits shortly after the current response has gone out. quit() immediately
+## after respond() tears the process down before asynchttpserver has flushed
+## and closed the connection, leaving the caller waiting on a response that
+## never completes.
+proc exitSoon() {.async.} =
+  await sleepAsync(50)
+  quit(0)
+
 proc handler(req: Request) {.async.} =
   let path = req.url.path
 
@@ -193,10 +201,15 @@ proc handler(req: Request) {.async.} =
         headers("application/json"))
       return
     # Answer before exiting, so the caller learns the request was accepted.
+    #
+    # The exit is deferred: quit() on the line after respond() tears the process
+    # down before asynchttpserver has flushed and closed the connection, so the
+    # caller waits forever on a response that never completes. That hung a CI
+    # job until its timeout.
     await req.respond(Http200, """{"ok":true,"stopping":true}""",
                       headers("application/json"))
     removeFile(PidFile)
-    quit(0)
+    asyncCheck exitSoon()
 
   # ─── The guide over HTTP (cli-guide-spec §3) ──────────────────
   if path == "/guide":

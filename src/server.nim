@@ -41,9 +41,14 @@ const
 
 var startTime = now()
 
-## The host/port the server actually bound. /_shutdown is token-gated whenever
-## the host is not loopback (cli-daemon-spec §3).
-var boundHost = DefaultHost
+## What the server actually bound. /_shutdown is token-gated whenever the host
+## is not loopback (cli-daemon-spec §3).
+##
+## The bound host is kept as a bool rather than the string it came from:
+## asynchttpserver needs a gcsafe callback, and a handler that reads a
+## module-level string global is not gcsafe. The only question ever asked of
+## the host is whether it is loopback, and a bool is a value type.
+var boundLoopback = true
 var boundPort = DefaultPort
 
 # ─── Output helpers ─────────────────────────────────────────────
@@ -156,7 +161,7 @@ proc isLoopback(host: string): bool =
 
 ## Off-loopback, an open shutdown route is a remote kill switch (§3).
 proc shutdownAuthorized(req: Request): bool =
-  if isLoopback(boundHost): return true
+  if boundLoopback: return true
   let token = getEnv("SHUTDOWN_TOKEN")
   if token.len == 0: return false
   $req.headers.getOrDefault("X-Shutdown-Token") == token
@@ -245,7 +250,7 @@ proc handler(req: Request) {.async.} =
 ## every interface, which is what an empty address means to asynchttpserver
 ## (cli-daemon-spec §1).
 proc runServer(host: string, port: int) =
-  boundHost = host
+  boundLoopback = isLoopback(host)
   boundPort = port
   startTime = now()
 
